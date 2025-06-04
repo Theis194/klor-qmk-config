@@ -1,0 +1,15 @@
+{
+    "files.associations": {
+        "klor.h": "c",
+        "*.cfg": "c",
+        "string.h": "c",
+        "stdio.h": "c",
+        "layers.h": "c",
+        "keycodes.h": "c",
+        "keymap_konrad.h": "c",
+        "keymap_polydactyl.h": "c",
+        "keymap_yubitsume.h": "c",
+        "keymap_saegewerk.h": "c",
+        "klor_keycodes.h": "c"
+    }
+}
