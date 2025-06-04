@@ -67,8 +67,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #ifdef RGB_MATRIX_ENABLE
 #    define SPLIT_TRANSPORT_MIRROR
-#    define DRIVER_LED_TOTAL 40 // Number of LEDs
-#    define RGB_MATRIX_SPLIT {20, 18}
+#    define DRIVER_LED_TOTAL 42 // Number of LEDs
+#    define RGB_MATRIX_SPLIT {21, 21}
 #    define RGB_MATRIX_MAXIMUM_BRIGHTNESS 180
 #    define RGB_MATRIX_STARTUP_HUE 35
 #    define RGB_MATRIX_STARTUP_VAL RGB_MATRIX_MAXIMUM_BRIGHTNESS
