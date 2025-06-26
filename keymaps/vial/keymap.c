@@ -28,10 +28,11 @@
 // ▝▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▘
 
 enum custom_keycodes {
-    ACTION_KEY = QK_KB_0, // Your leader key
+    ACTION_KEY = QK_KB_0,
 };
 
 static uint8_t previous_layer = 0; // Tracks the layer we came from
+static bool action_key_activated = false; // Tracks if we entered via ACTION_KEY
 
 // Action layer functionality
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
@@ -42,18 +43,25 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
                 if (current_layer == ACTION_LAYER) {
                     // Find and return to the highest non-normal layer
+                    action_key_activated = false;
                     layer_move(previous_layer);
                 } else {
                     previous_layer = current_layer;
+                    action_key_activated = true;
                     layer_move(ACTION_LAYER);
                 }
             }
             return false;
 
         case KC_ENT:
-            if (record->event.pressed && layer_state_is(ACTION_LAYER)) {
-                // Same logic as above to exit normal mode
-                layer_move(previous_layer);
+            if (record->event.pressed && layer_state_is(ACTION_LAYER) && action_key_activated) {
+                if (action_key_activated) {
+                    // Only exit if ACTION_KEY was used to enter
+                    action_key_activated = false;
+                    layer_move(previous_layer);
+                    return false; // Block default Enter behavior
+                }
+                // If not action_key_activated, allow normal Enter
             }
             return true;
     }
