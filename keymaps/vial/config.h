@@ -21,9 +21,11 @@
 /* #define NO_ACTION_ONESHOT
 #define NO_ACTION_TAPPING */
 #define NO_MUSIC_MODE
-#define DYNAMIC_KEYMAP_LAYER_COUNT 8
+#define DYNAMIC_KEYMAP_LAYER_COUNT 20
 
 #define CHORDAL_HOLD
+
+#define ACTION_LAYER 0
 
 // RGB matrix support
 #ifdef RGB_MATRIX_ENABLE

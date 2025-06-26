@@ -6,9 +6,9 @@
     "modules": ["qmk/hello_world", "getreuer/achordion"],
     "customKeycodes": [
         {
-            "name": "VIM_LEADER",
+            "name": "ACTION_KEY",
             "title": "Toggles layer 0 (until enter is pressed)",
-            "shortName": "LEADER"
+            "shortName": "ACTION"
         }
     ],
     "split": {
