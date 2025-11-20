@@ -59,7 +59,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     // Only exit if ACTION_KEY was used to enter
                     action_key_activated = false;
                     layer_move(previous_layer);
-                    return false; // Block default Enter behavior
+                    return true; // Block default Enter behavior
                 }
                 // If not action_key_activated, allow normal Enter
             }
@@ -277,10 +277,16 @@ layer_state_t layer_state_set_kb(layer_state_t state) {
             strcpy(layer_state_str, "CS2");
             break;
         case 7:
-            strcpy(layer_state_str, "MINECRAFT");
+            strcpy(layer_state_str, "MC - GREG");
             break;
         case 8:
             strcpy(layer_state_str, "POE");
+            break;
+        case 9:
+            strcpy(layer_state_str, "MC - FTB");
+            break;
+        case 10:
+            strcpy(layer_state_str, "BF6");
             break;
         default:
             strcpy(layer_state_str, "XXXXXX");
