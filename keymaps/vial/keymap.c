@@ -28,37 +28,42 @@
 // ▝▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▘
 
 enum custom_keycodes {
-    VIM_LEADER = QK_KB_0, // Your leader key
+    ACTION_KEY = QK_KB_0,
 };
 
-#define NORMAL_LAYER 7 // Your vim normal mode layer
-#define INSERT_LAYER 0 // Your typing layer
-static bool in_normal_mode = false;
+static uint8_t previous_layer = 0; // Tracks the layer we came from
+static bool action_key_activated = false; // Tracks if we entered via ACTION_KEY
 
+// Action layer functionality
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
-        case VIM_LEADER:
+        case ACTION_KEY:
             if (record->event.pressed) {
-                if (in_normal_mode) {
-                    // If already in normal mode, return to insert
-                    layer_move(NORMAL_LAYER);
-                    in_normal_mode = false;
+                uint8_t current_layer = get_highest_layer(layer_state);
+
+                if (current_layer == ACTION_LAYER) {
+                    // Find and return to the highest non-normal layer
+                    action_key_activated = false;
+                    layer_move(previous_layer);
                 } else {
-                    // Enter normal mode
-                    layer_move(INSERT_LAYER);
-                    in_normal_mode = true;
-                    tap_code16(S(KC_DOT)); // Produces ':' on most layouts
+                    previous_layer = current_layer;
+                    action_key_activated = true;
+                    layer_move(ACTION_LAYER);
                 }
             }
-            return false; // Skip all further processing
+            return false;
 
         case KC_ENT:
-            if (record->event.pressed && in_normal_mode) {
-                // Return to insert mode on Enter
-                layer_move(NORMAL_LAYER);
-                in_normal_mode = false;
+            if (record->event.pressed && layer_state_is(ACTION_LAYER) && action_key_activated) {
+                if (action_key_activated) {
+                    // Only exit if ACTION_KEY was used to enter
+                    action_key_activated = false;
+                    layer_move(previous_layer);
+                    return true; // Block default Enter behavior
+                }
+                // If not action_key_activated, allow normal Enter
             }
-            return true; // Allow normal Enter behavior
+            return true;
     }
     return true;
 }
@@ -272,7 +277,16 @@ layer_state_t layer_state_set_kb(layer_state_t state) {
             strcpy(layer_state_str, "CS2");
             break;
         case 7:
-            strcpy(layer_state_str, "NORMAL MODE");
+            strcpy(layer_state_str, "MC - GREG");
+            break;
+        case 8:
+            strcpy(layer_state_str, "POE");
+            break;
+        case 9:
+            strcpy(layer_state_str, "MC - FTB");
+            break;
+        case 10:
+            strcpy(layer_state_str, "BF6");
             break;
         default:
             strcpy(layer_state_str, "XXXXXX");

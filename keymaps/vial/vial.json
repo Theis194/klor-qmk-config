@@ -3,12 +3,12 @@
     "vendorId": "0xFC32",
     "productId": "0x0287",
     "lighting": "vialrgb",
-    "modules": ["qmk/hello_world", "getreuer/achordion"],
+    "modules": ["qmk/hello_world"],
     "customKeycodes": [
         {
-            "name": "VIM_LEADER",
+            "name": "ACTION_KEY",
             "title": "Toggles layer 0 (until enter is pressed)",
-            "shortName": "LEADER"
+            "shortName": "ACTION"
         }
     ],
     "split": {
