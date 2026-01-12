@@ -3,7 +3,7 @@
     "vendorId": "0xFC32",
     "productId": "0x0287",
     "lighting": "vialrgb",
-    "modules": ["qmk/hello_world", "getreuer/achordion"],
+    "modules": ["qmk/hello_world"],
     "customKeycodes": [
         {
             "name": "ACTION_KEY",
