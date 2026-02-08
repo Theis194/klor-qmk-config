@@ -49,7 +49,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                     previous_layer = current_layer;
                     action_key_activated = true;
                     layer_move(ACTION_LAYER);
-                    layer_state_set_kb(layer_state); // Update OLED immediately
                 }
             }
             return false;
