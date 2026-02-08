@@ -137,7 +137,7 @@ const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = LAYOUT(
 #ifdef ENCODER_MAP_ENABLE
 
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][2] = {
-    [0] = {ENCODER_CCW_CW(KC_MS_WH_UP, KC_MS_WH_DOWN), ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
+    [0] = {ENCODER_CCW_CW(QK_MOUSE_WHEEL_UP, QK_MOUSE_WHEEL_DOWN), ENCODER_CCW_CW(KC_VOLD, KC_VOLU)},
     [1] = {ENCODER_CCW_CW(RGB_HUD, RGB_HUI), ENCODER_CCW_CW(RGB_SAD, RGB_SAI)},
     [2] = {ENCODER_CCW_CW(RGB_VAD, RGB_VAI), ENCODER_CCW_CW(RGB_SPD, RGB_SPI)},
     [3] = {ENCODER_CCW_CW(RGB_RMOD, RGB_MOD), ENCODER_CCW_CW(KC_RIGHT, KC_LEFT)},
@@ -174,6 +174,7 @@ void render_os_lock_status(void) {
     static const char PROGMEM n_lock[] = {0x91, 0x92, 0};
     static const char PROGMEM c_lock[] = {0x93, 0x94, 0};
     static const char PROGMEM b_lock[] = {0xE1, 0xE1, 0};
+    static const char PROGMEM action_on[] = {0x41, 0x43, 0x54, 0};
 #    ifdef AUDIO_ENABLE
     static const char PROGMEM aud_en[] = {0xAF, 0xB0, 0};
     static const char PROGMEM aud_di[] = {0xCF, 0xD0, 0};
@@ -221,6 +222,14 @@ void render_os_lock_status(void) {
     }
     if (led_usb_state.scroll_lock) { // ─ SCROLLLOCK
         oled_write_P(s_lock, false);
+    } else {
+        oled_write_P(b_lock, false);
+    }
+
+    // ACTION
+
+    if (action_key_activated) {
+        oled_write_P(action_on, false); // ── ACTION LAYER ON
     } else {
         oled_write_P(b_lock, false);
     }
