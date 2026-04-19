@@ -18,6 +18,7 @@
 #include QMK_KEYBOARD_H
 #include <stdio.h>
 #include <string.h>
+#include "nvm_dynamic_keymap.h"
 #if HAPTIC_ENABLE
 #    include "drivers/haptic/DRV2605L.h"
 #endif // HAPTIC ENABLE
@@ -263,44 +264,55 @@ void render_os_lock_status(void) {
 int layerstate = 0;
 
 layer_state_t layer_state_set_kb(layer_state_t state) {
-    switch (get_highest_layer(state)) {
-        case 0:
-            strcpy(layer_state_str, "BASE QWERTY");
-            break;
-        case 1:
-            strcpy(layer_state_str, "LOWER");
-            break;
-        case 2:
-            strcpy(layer_state_str, "RAISE");
-            break;
-        case 3:
-            strcpy(layer_state_str, "ADJUST");
-            break;
-        case 4:
-            strcpy(layer_state_str, "PUBG");
-            break;
-        case 5:
-            strcpy(layer_state_str, "NOITA");
-            break;
-        case 6:
-            strcpy(layer_state_str, "CS2");
-            break;
-        case 7:
-            strcpy(layer_state_str, "MC - GREG");
-            break;
-        case 8:
-            strcpy(layer_state_str, "POE");
-            break;
-        case 9:
-            strcpy(layer_state_str, "MC - FTB");
-            break;
-        case 10:
-            strcpy(layer_state_str, "BF6");
-            break;
-        default:
-            strcpy(layer_state_str, "XXXXXX");
+    uint8_t layer = get_highest_layer(state);
+
+    // Default placeholder in case fetching the layer name fails
+    snprintf(layer_state_str, sizeof(layer_state_str), "Layer %u", layer);
+
+    uint8_t raw[16] = {0};
+    char tmp[17] = {0};
+
+    // Attempt to fetch the layer name from NVM. If it fails, we keep the default placeholder.
+    if (nvm_dynamic_keymap_get_layer_name(layer, raw) != 0) {
+        return state;
     }
 
+    // Process the raw layer name, ensuring it's printable and properly null-terminated
+    bool has_printable = false;
+    int out = 0;
+    for (int i = 0; i < 16; i++) {
+        uint8_t b = raw[i];
+        if (b == 0) {
+            break;
+        }
+
+        if (b >= 0x20 && b <= 0x7E) {
+            tmp[out++] = (char)b;
+            has_printable = true;
+        } else {
+            tmp[out++] = ' ';
+        }
+    }
+
+    tmp[out] = '\0';
+
+    // Trim trailing spaces and null characters
+    for (int i = out - 1; i >= 0; i--) {
+        if (tmp[i] == ' ' || tmp[i] == '\0') {
+            tmp[i] = '\0';
+        } else {
+            break;
+        }
+    }
+
+    // If we didn't find any printable characters, keep the default placeholder
+    if (!has_printable || tmp[0] == '\0') {
+        return state;
+    }
+
+    // Copy the processed layer name into the global variable for OLED display
+    strncpy(layer_state_str, tmp, sizeof(layer_state_str) - 1);
+    layer_state_str[sizeof(layer_state_str) - 1] = '\0';
     return state;
 }
 

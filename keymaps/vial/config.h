@@ -29,6 +29,7 @@
 #define CHORDAL_HOLD
 #define SPECULATIVE_HOLD
 
+#define VIAL_DYNAMIC_LAYER_NAME_ENABLE
 #define ACTION_LAYER 0
 
 // RGB matrix support
